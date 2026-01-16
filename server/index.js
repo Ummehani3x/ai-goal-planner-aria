@@ -33,9 +33,14 @@ app.get('/health', (req, res) => {
 });
 
 // MongoDB Connection
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/ai-goal-planner')
+if (process.env.MONGODB_URI) {
+  mongoose.connect(process.env.MONGODB_URI)
     .then(() => console.log('[SERVER] Connected to MongoDB'))
     .catch(err => console.error('[SERVER] MongoDB connection error:', err));
+} else {
+  console.log('[SERVER] MongoDB not configured — running in stateless mode');
+}
+
 
 app.listen(PORT, () => {
     console.log(`[SERVER] ✓ Server running on port ${PORT}`);
