@@ -22,17 +22,17 @@ app.use(express.json());
 // Main API Routes
 app.use('/api', apiRoutes);
 
-// Health Check with instance info
+// Health Check
 app.get('/health', (req, res) => {
-    res.json({
-        status: 'ok',
-        pid: process.pid,
-        uptime: process.uptime(),
-        timestamp: new Date().toISOString()
-    });
+  res.json({
+    status: 'ok',
+    pid: process.pid,
+    uptime: process.uptime(),
+    timestamp: new Date().toISOString()
+  });
 });
 
-// MongoDB Connection
+// MongoDB (optional)
 if (process.env.MONGODB_URI) {
   mongoose.connect(process.env.MONGODB_URI)
     .then(() => console.log('[SERVER] Connected to MongoDB'))
@@ -41,8 +41,8 @@ if (process.env.MONGODB_URI) {
   console.log('[SERVER] MongoDB not configured — running in stateless mode');
 }
 
-
-app.listen(PORT, () => {
-    console.log(`[SERVER] ✓ Server running on port ${PORT}`);
-    console.log(`[SERVER] ✓ Health check: http://localhost:${PORT}/health`);
+// 🚀 IMPORTANT: bind to 0.0.0.0 for Railway
+app.listen(PORT, "0.0.0.0", () => {
+  console.log(`[SERVER] ✓ Server running on port ${PORT}`);
+  console.log(`[SERVER] ✓ Health check available at /health`);
 });
